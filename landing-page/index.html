@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flick App - Never Lose Your Lighter Again</title>
+    <meta name="description" content="Join the Flick community! Track, trade, and collect unique lighters. Coming soon to iOS.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logos/favicon.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="assets/logos/Logotype.png" alt="Flick" class="logo-image">
+                </div>
+                <button class="menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#about">About</a>
+                    <a href="#join">Join Waitlist</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Never Lose Your<br>
+                        <span class="gradient-text">Lighter Again</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Flick is the revolutionary app that helps you track, trade, and collect unique lighters. 
+                        Scan QR codes, build your collection, trade with collectors worldwide, and never lose track of your lighters. 
+                        Join the ultimate lighter community.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn-primary" onclick="scrollToWaitlist()">
+                            Join the Waitlist
+                        </button>
+                        <button class="btn-secondary" onclick="scrollToFeatures()">
+                            Learn More
+                        </button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">1000+</span>
+                            <span class="stat-label">Waitlist Signups</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">200+</span>
+                            <span class="stat-label">Lighters Registered</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">Coming Soon</span>
+                            <span class="stat-label">iOS Launch</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="app-icon-intro">
+                        <img src="assets/logos/Flick_Icon.png" alt="Flick App Icon" class="hero-app-icon">
+                    </div>
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <!-- Screen 1: QR Scan -->
+                            <div class="app-preview active" data-screen="1">
+                                <div class="app-header">
+                                    <div class="app-status-bar">
+                                        <span>9:41</span>
+                                        <span class="battery">🔋 100%</span>
+                                    </div>
+                                </div>
+                                <div class="app-content">
+                                    <div class="scan-animation">
+                                        <div class="qr-scanner">
+                                            <div class="scanner-frame"></div>
+                                            <div class="scanner-line"></div>
+                                        </div>
+                                        <h3>Scan Your Lighter</h3>
+                                        <p>Point camera at QR code</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Screen 2: Collection -->
+                            <div class="app-preview" data-screen="2">
+                                <div class="app-header">
+                                    <div class="app-status-bar">
+                                        <span>9:41</span>
+                                        <span class="battery">🔋 100%</span>
+                                    </div>
+                                </div>
+                                <div class="app-content">
+                                    <div class="lighter-card">
+                                        <div class="lighter-qr gradient-fire">🔥</div>
+                                        <div class="lighter-info">
+                                            <h3>Vintage Zippo</h3>
+                                            <p>Owner: @collector123</p>
+                                            <div class="lighter-badges">
+                                                <span class="badge">⭐ Rare</span>
+                                                <span class="badge">📍 NYC</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="app-actions">
+                                        <button class="app-btn">Scan QR</button>
+                                        <button class="app-btn">Trade</button>
+                                        <button class="app-btn">History</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Screen 3: Marketplace -->
+                            <div class="app-preview" data-screen="3">
+                                <div class="app-header">
+                                    <div class="app-status-bar">
+                                        <span>9:41</span>
+                                        <span class="battery">🔋 100%</span>
+                                    </div>
+                                </div>
+                                <div class="app-content">
+                                    <div class="marketplace-view">
+                                        <h3>Marketplace</h3>
+                                        <div class="marketplace-items">
+                                            <div class="marketplace-item">
+                                                <div class="item-icon">🔥</div>
+                                                <p>Zippo 1941</p>
+                                                <span class="price">Trade</span>
+                                            </div>
+                                            <div class="marketplace-item">
+                                                <div class="item-icon">🔥</div>
+                                                <p>Limited Ed.</p>
+                                                <span class="price">Trade</span>
+                                            </div>
+                                            <div class="marketplace-item">
+                                                <div class="item-icon">🔥</div>
+                                                <p>Vintage</p>
+                                                <span class="price">Trade</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Screen 4: Achievement -->
+                            <div class="app-preview" data-screen="4">
+                                <div class="app-header">
+                                    <div class="app-status-bar">
+                                        <span>9:41</span>
+                                        <span class="battery">🔋 100%</span>
+                                    </div>
+                                </div>
+                                <div class="app-content">
+                                    <div class="achievement-badge">
+                                        <div class="badge-icon">🏆</div>
+                                        <h3>Level Up!</h3>
+                                        <p>Collector Status</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <span class="level">Bronze → Silver</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-gradient"></div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-subtitle">Everything you need to track, trade, and collect lighters</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">QR Code Tracking</h3>
+                    <p class="feature-description">
+                        Scan any lighter with our unique QR system using native iOS camera. Track location, history, and ownership with just a tap. Smart web fallback for non-users.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">Trade & Marketplace</h3>
+                    <p class="feature-description">
+                        Browse a community marketplace of rare and unique lighters. Send trade requests, gift to friends, or explore collections. Secure ownership transfers.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Lost & Found</h3>
+                    <p class="feature-description">
+                        Report lost lighters instantly. Found someone else's? Help reunite it with the owner through our community network and messaging system.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Gamification & Rewards</h3>
+                    <p class="feature-description">
+                        Earn points for scans, trades, and location updates. Unlock badges, climb leaderboards, and reach Bronze to Platinum tiers. Daily rewards included.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3 class="feature-title">Smart Location Tracking</h3>
+                    <p class="feature-description">
+                        Get intelligent notifications asking if your lighter is with you. Automatic GPS updates, lost mode activation, and privacy-respecting location history.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3 class="feature-title">Ownership Timeline</h3>
+                    <p class="feature-description">
+                        View the complete journey of every lighter from X → A → B → You. Privacy-respecting display with optional profile visibility settings.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Get started in three simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Register Your Lighter</h3>
+                        <p class="step-description">
+                            Scan the unique QR code on your lighter with the Flick app. Add photos, details, and you're done!
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Track & Trade</h3>
+                        <p class="step-description">
+                            Monitor your collection, browse the marketplace, or start a trade with another collector.
+                        </p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Build Your Legacy</h3>
+                        <p class="step-description">
+                            Earn achievements, unlock rewards, and become part of the ultimate lighter community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section id="join" class="waitlist">
+        <div class="container">
+            <div class="waitlist-content">
+                <h2 class="waitlist-title">Be Among the First</h2>
+                <p class="waitlist-subtitle">
+                    Join the Flick waitlist and get early access when we launch on iOS. 
+                    Plus, receive exclusive collector perks!
+                </p>
+                <form class="waitlist-form" id="waitlistForm">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="phone" placeholder="Phone Number (Optional)">
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        Join the Waitlist
+                    </button>
+                </form>
+                <p class="waitlist-note">
+                    🔒 We respect your privacy. No spam, unsubscribe anytime.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Company Section -->
+    <section id="about" class="about-company">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About Good Monkeys LLC</h2>
+                <p class="section-subtitle">Innovating the way collectors connect</p>
+            </div>
+            <div class="company-content">
+                <div class="company-intro">
+                    <div class="company-logos">
+                        <img src="assets/logos/GoodMonkeys_Logo_GM_V01_Primary_Logo.png" alt="Good Monkeys Primary Logo" class="company-primary-logo">
+                        <div class="company-logomark">
+                            <img src="assets/logos/GoodMonkeys_Logo_GM_V01_Logomark.png" alt="Good Monkeys Logomark">
+                        </div>
+                    </div>
+                </div>
+                <div class="company-text">
+                    <h3 class="company-title">Our Mission</h3>
+                    <p class="company-description">
+                        Good Monkeys LLC is a forward-thinking technology company dedicated to revolutionizing the collector community through innovative digital solutions. We believe every collector deserves a platform that combines modern convenience with timeless passion for collecting.
+                    </p>
+                    <p class="company-description">
+                        With Flick, we're bringing the lighter collecting community into the digital age—making it easier to track your collection, discover rare finds, connect with fellow collectors, and never lose sight of what matters most to you.
+                    </p>
+                    <h3 class="company-title">What We're Building</h3>
+                    <p class="company-description">
+                        Flick represents the future of collector platforms: a mobile-first experience built for iOS, with cutting-edge features like QR code tracking, smart location services, and a thriving community marketplace. We're not just building an app—we're building a movement.
+                    </p>
+                    <div class="company-stats">
+                        <div class="company-stat">
+                            <div class="flat-icon innovation-icon"></div>
+                            <span class="company-stat-label">Innovation First</span>
+                        </div>
+                        <div class="company-stat">
+                            <div class="flat-icon community-icon"></div>
+                            <span class="company-stat-label">Community Driven</span>
+                        </div>
+                        <div class="company-stat">
+                            <div class="flat-icon privacy-icon"></div>
+                            <span class="company-stat-label">Privacy Focused</span>
+                        </div>
+                        <div class="company-stat">
+                            <div class="flat-icon mobile-icon"></div>
+                            <span class="company-stat-label">Built for iOS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <img src="assets/logos/Logotype.png" alt="Flick" class="logo-image">
+                    </div>
+                    <p class="footer-tagline">
+                        Never lose your lighter again. Track, trade, collect.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-title">Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#join">Join Waitlist</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 class="footer-title">Company</h4>
+                        <a href="#about">About Us</a>
+                        <a href="#join">Join Waitlist</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4 class="footer-title">Legal</h4>
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flick by Good Monkeys LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-icon">✅</div>
+            <h3 class="modal-title">You're In!</h3>
+            <p class="modal-message">
+                Thanks for joining the Flick waitlist. We'll notify you as soon as we launch!
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

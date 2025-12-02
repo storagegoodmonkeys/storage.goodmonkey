@@ -1,0 +1,45 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/
+*.xcuserstate
+*.xcuserdatad
+
+# Swift Package Manager
+.build/
+.swiftpm/
+*.xcodeproj/xcuserdata/
+
+# CocoaPods
+Pods/
+*.podspec
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build
+build/
+DerivedData/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Secrets & Config (Don't commit actual credentials)
+# Keep SupabaseService.swift but credentials should be in environment or secure storage
+
+# Temporary files
+*.tmp
+*.log
+
+# Supabase local files (if using local dev)
+.supabase/
+
