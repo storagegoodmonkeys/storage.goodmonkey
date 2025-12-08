@@ -594,7 +594,105 @@ class SupabaseService: ObservableObject {
     }
 }
 
-// MARK: - Response Models
+
+    // MARK: - Messaging Operations
+    
+    func getConversations(userId: String) async throws -> [Conversation] {
+        let url = "\(baseURL)/conversations?or=(participant1_id.eq.\(userId),participant2_id.eq.\(userId))&order=last_message_at.desc.nullsfirst"
+        
+        let response: [ConversationResponse] = try await makeRequest(endpoint: url)
+        
+        return response.map { conv in
+            Conversation(
+                id: conv.id,
+                participant1Id: conv.participant1_id,
+                participant2Id: conv.participant2_id,
+                lastMessage: conv.last_message,
+                lastMessageAt: conv.last_message_at != nil ? ISO8601DateFormatter().date(from: conv.last_message_at!) : nil,
+                unreadCount: 0, // TODO: Calculate from messages
+                createdAt: ISO8601DateFormatter().date(from: conv.created_at) ?? Date()
+            )
+        }
+    }
+    
+    func getMessages(conversationId: String) async throws -> [Message] {
+        let url = "\(baseURL)/messages?conversation_id=eq.\(conversationId)&order=created_at.asc"
+        
+        let response: [MessageResponse] = try await makeRequest(endpoint: url)
+        
+        return response.map { msg in
+            Message(
+                id: msg.id,
+                conversationId: msg.conversation_id,
+                senderId: msg.sender_id,
+                content: msg.content,
+                isRead: msg.is_read,
+                createdAt: ISO8601DateFormatter().date(from: msg.created_at) ?? Date()
+            )
+        }
+    }
+    
+    func sendMessage(conversationId: String, senderId: String, content: String) async throws -> Message {
+        let url = "\(baseURL)/messages"
+        let body: [String: Any] = [
+            "conversation_id": conversationId,
+            "sender_id": senderId,
+            "content": content,
+            "is_read": false
+        ]
+        
+        let bodyData = try JSONSerialization.data(withJSONObject: body)
+        let response: [MessageResponse] = try await makeRequest(endpoint: url, method: "POST", body: bodyData)
+        
+        guard let msg = response.first else {
+            throw SupabaseError.apiError("Failed to send message")
+        }
+        
+        return Message(
+            id: msg.id,
+            conversationId: msg.conversation_id,
+            senderId: msg.sender_id,
+            content: msg.content,
+            isRead: msg.is_read,
+            createdAt: ISO8601DateFormatter().date(from: msg.created_at) ?? Date()
+        )
+    }
+    
+    func createConversation(participant1Id: String, participant2Id: String) async throws -> Conversation {
+        let url = "\(baseURL)/conversations"
+        let body: [String: Any] = [
+            "participant1_id": participant1Id,
+            "participant2_id": participant2Id
+        ]
+        
+        let bodyData = try JSONSerialization.data(withJSONObject: body)
+        let response: [ConversationResponse] = try await makeRequest(endpoint: url, method: "POST", body: bodyData)
+        
+        guard let conv = response.first else {
+            throw SupabaseError.apiError("Failed to create conversation")
+        }
+        
+        return Conversation(
+            id: conv.id,
+            participant1Id: conv.participant1_id,
+            participant2Id: conv.participant2_id,
+            lastMessage: nil,
+            lastMessageAt: nil,
+            unreadCount: 0,
+            createdAt: ISO8601DateFormatter().date(from: conv.created_at) ?? Date()
+        )
+    }
+    
+    func markMessagesAsRead(conversationId: String, userId: String) async throws {
+        let url = "\(baseURL)/messages?conversation_id=eq.\(conversationId)&sender_id=neq.\(userId)&is_read=eq.false"
+        let body: [String: Any] = ["is_read": true]
+        
+        let bodyData = try JSONSerialization.data(withJSONObject: body)
+        let _: EmptyResponse = try await makeRequest(endpoint: url, method: "PATCH", body: bodyData)
+    }
+    
+
+    // MARK: - Response Models
 
 private struct UserResponse: Codable {
     let id: String
@@ -695,6 +793,26 @@ private struct SupabaseErrorResponse: Codable {
     let message: String?
     let code: String?
     let details: String?
+}
+
+
+
+private struct ConversationResponse: Codable {
+    let id: String
+    let participant1_id: String
+    let participant2_id: String
+    let last_message: String?
+    let last_message_at: String?
+    let created_at: String
+}
+
+private struct MessageResponse: Codable {
+    let id: String
+    let conversation_id: String
+    let sender_id: String
+    let content: String
+    let is_read: Bool
+    let created_at: String
 }
 
 // MARK: - Errors

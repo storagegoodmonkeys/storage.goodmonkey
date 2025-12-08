@@ -98,3 +98,39 @@ enum LostFoundStatus: String, Codable {
 }
 
 
+
+// MARK: - Messaging Models
+
+struct Conversation: Identifiable, Codable {
+    let id: String
+    let participant1Id: String
+    let participant2Id: String
+    var lastMessage: String?
+    var lastMessageAt: Date?
+    var unreadCount: Int
+    let createdAt: Date
+    
+    // Helper to get other participant ID
+    func otherParticipantId(currentUserId: String) -> String {
+        return participant1Id == currentUserId ? participant2Id : participant1Id
+    }
+}
+
+struct Message: Identifiable, Codable {
+    let id: String
+    let conversationId: String
+    let senderId: String
+    let content: String
+    var isRead: Bool
+    let createdAt: Date
+}
+
+// For displaying conversation with user details
+struct ConversationWithUser: Identifiable {
+    let id: String
+    let conversation: Conversation
+    let otherUser: User
+    var lastMessage: String?
+    var lastMessageAt: Date?
+    var unreadCount: Int
+}

@@ -19,7 +19,7 @@ struct HomeView: View {
                 
                 ScrollView {
                     VStack(spacing: 0) {
-                        // Header with Title and Profile
+                        // Header with Title and Icons (including Messages like Instagram)
                         HStack {
                             Text("CLIPPER VAULT")
                                 .font(.system(size: 22, weight: .bold))
@@ -28,6 +28,21 @@ struct HomeView: View {
                             Spacer()
                             
                             HStack(spacing: AppTheme.Spacing.md) {
+                                // Messages icon (like Instagram DM)
+                                NavigationLink(destination: MessagesListView()) {
+                                    ZStack(alignment: .topTrailing) {
+                                        Image(systemName: "paperplane")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(AppTheme.textPrimary)
+                                        
+                                        // Unread indicator dot
+                                        Circle()
+                                            .fill(AppTheme.primary)
+                                            .frame(width: 8, height: 8)
+                                            .offset(x: 2, y: -2)
+                                    }
+                                }
+                                
                                 NavigationLink(destination: ScanView()) {
                                     Image(systemName: "qrcode.viewfinder")
                                         .font(.system(size: 20))
