@@ -592,9 +592,7 @@ class SupabaseService: ObservableObject {
             )
         }
     }
-}
-
-
+    
     // MARK: - Messaging Operations
     
     func getConversations(userId: String) async throws -> [Conversation] {
@@ -690,9 +688,9 @@ class SupabaseService: ObservableObject {
         let bodyData = try JSONSerialization.data(withJSONObject: body)
         let _: EmptyResponse = try await makeRequest(endpoint: url, method: "PATCH", body: bodyData)
     }
-    
+}
 
-    // MARK: - Response Models
+// MARK: - Response Models
 
 private struct UserResponse: Codable {
     let id: String
