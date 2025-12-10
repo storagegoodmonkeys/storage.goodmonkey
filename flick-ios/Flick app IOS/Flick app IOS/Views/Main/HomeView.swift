@@ -15,98 +15,124 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.white.ignoresSafeArea()
+                // Subtle gradient background
+                LinearGradient(
+                    colors: [Color.white, Color(red: 0.98, green: 0.98, blue: 1.0)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 0) {
-                        // Header with Title and Icons (including Messages like Instagram)
+                        // Header with Logo and QR Scan (prominent)
                         HStack {
-                            Text("CLIPPER VAULT")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(AppTheme.textPrimary)
+                            // App Title/Logo
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("CLIPPER")
+                                    .font(.system(size: 24, weight: .black))
+                                    .foregroundColor(AppTheme.primary)
+                                + Text(" VAULT")
+                                    .font(.system(size: 24, weight: .black))
+                                    .foregroundColor(AppTheme.textPrimary)
+                            }
                             
                             Spacer()
                             
-                            HStack(spacing: AppTheme.Spacing.md) {
-                                // Messages icon (like Instagram DM)
-                                NavigationLink(destination: MessagesListView()) {
-                                    ZStack(alignment: .topTrailing) {
-                                        Image(systemName: "paperplane")
-                                            .font(.system(size: 20))
-                                            .foregroundColor(AppTheme.textPrimary)
-                                        
-                                        // Unread indicator dot
-                                        Circle()
-                                            .fill(AppTheme.primary)
-                                            .frame(width: 8, height: 8)
-                                            .offset(x: 2, y: -2)
-                                    }
-                                }
-                                
-                                NavigationLink(destination: ScanView()) {
+                            // QR Scan Button - Prominent (Client Request)
+                            NavigationLink(destination: ScanView()) {
+                                HStack(spacing: 6) {
                                     Image(systemName: "qrcode.viewfinder")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(AppTheme.textPrimary)
+                                        .font(.system(size: 18, weight: .semibold))
+                                    Text("Scan")
+                                        .font(.system(size: 14, weight: .semibold))
                                 }
-                                
-                                NavigationLink(destination: ProfileView()) {
-                                    Image(systemName: "person.circle")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(AppTheme.textPrimary)
-                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
+                                .background(AppTheme.primary)
+                                .cornerRadius(25)
+                                .shadow(color: AppTheme.primary.opacity(0.3), radius: 8, x: 0, y: 4)
                             }
                         }
                         .padding(.horizontal, AppTheme.Spacing.lg)
-                        .padding(.vertical, AppTheme.Spacing.md)
+                        .padding(.top, AppTheme.Spacing.md)
+                        .padding(.bottom, AppTheme.Spacing.lg)
                         
-                        Divider()
-                            .background(AppTheme.border)
+                        // Welcome Banner
+                        WelcomeBanner()
+                            .padding(.horizontal, AppTheme.Spacing.lg)
+                            .padding(.bottom, AppTheme.Spacing.xl)
                         
-                        // Latest Lighters Section - ONE lighter per card
+                        // Quick Actions
+                        QuickActionsRow()
+                            .padding(.horizontal, AppTheme.Spacing.lg)
+                            .padding(.bottom, AppTheme.Spacing.xl)
+                        
+                        // Your Lighters Section
                         VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
-                            Text("Latest Lighters")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(AppTheme.textPrimary)
-                                .padding(.horizontal, AppTheme.Spacing.lg)
-                                .padding(.top, AppTheme.Spacing.lg)
-                            
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: AppTheme.Spacing.md) {
-                                    // Show first 5 lighters - each with ONE unique design
-                                    ForEach(Array(mockData.lighters.prefix(5).enumerated()), id: \.element.id) { index, lighter in
-                                        NavigationLink(destination: CollectionView()) {
-                                            LighterHorizontalCard(
-                                                lighter: lighter,
-                                                index: index
-                                            )
-                                        }
-                                        .buttonStyle(PlainButtonStyle())
-                                    }
+                            HStack {
+                                Text("Your Lighters")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(AppTheme.textPrimary)
+                                
+                                Spacer()
+                                
+                                NavigationLink(destination: CollectionView()) {
+                                    Text("See All")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(AppTheme.primary)
                                 }
-                                .padding(.horizontal, AppTheme.Spacing.lg)
+                            }
+                            .padding(.horizontal, AppTheme.Spacing.lg)
+                            
+                            if mockData.lighters.isEmpty {
+                                EmptyLightersCard()
+                                    .padding(.horizontal, AppTheme.Spacing.lg)
+                            } else {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: AppTheme.Spacing.md) {
+                                        ForEach(Array(mockData.lighters.prefix(5).enumerated()), id: \.element.id) { index, lighter in
+                                            NavigationLink(destination: CollectionView()) {
+                                                LighterHorizontalCard(
+                                                    lighter: lighter,
+                                                    index: index
+                                                )
+                                            }
+                                            .buttonStyle(PlainButtonStyle())
+                                        }
+                                    }
+                                    .padding(.horizontal, AppTheme.Spacing.lg)
+                                }
                             }
                         }
                         .padding(.bottom, AppTheme.Spacing.xl)
                         
-                        // Latest Campaigns/Giveaways Section
+                        // Campaigns & Giveaways
                         VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
-                            Text("Latest Campaigns/Giveaways")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(AppTheme.textPrimary)
-                                .padding(.horizontal, AppTheme.Spacing.lg)
+                            HStack {
+                                Text("🎁 Campaigns & Giveaways")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(AppTheme.textPrimary)
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, AppTheme.Spacing.lg)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: AppTheme.Spacing.md) {
                                     CampaignCardClipper(
                                         title: "LIMITED EDITION DROP",
+                                        subtitle: "Exclusive designs only for members",
                                         date: "20/12/2024",
-                                        gradient: [Color(red: 0.2, green: 0.3, blue: 0.5), Color(red: 0.1, green: 0.2, blue: 0.4)],
+                                        gradient: [Color(red: 1.0, green: 0.4, blue: 0.2), Color(red: 1.0, green: 0.6, blue: 0.3)],
                                         lighterIndex: 0
                                     )
                                     CampaignCardClipper(
-                                        title: "WIN A RARE CLIPPER SET",
-                                        date: "15/04/2024",
-                                        gradient: [Color(red: 0.5, green: 0.2, blue: 0.6), Color(red: 0.4, green: 0.1, blue: 0.5)],
+                                        title: "WIN RARE CLIPPER SET",
+                                        subtitle: "Enter the raffle now",
+                                        date: "15/01/2025",
+                                        gradient: [Color(red: 0.4, green: 0.3, blue: 0.9), Color(red: 0.6, green: 0.4, blue: 1.0)],
                                         lighterIndex: 1
                                     )
                                 }
@@ -115,12 +141,22 @@ struct HomeView: View {
                         }
                         .padding(.bottom, AppTheme.Spacing.xl)
                         
-                        // Top 100 Collections Section
+                        // Top Collectors
                         VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
-                            Text("Top 100 Collections")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(AppTheme.textPrimary)
-                                .padding(.horizontal, AppTheme.Spacing.lg)
+                            HStack {
+                                Text("🏆 Top Collectors")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(AppTheme.textPrimary)
+                                
+                                Spacer()
+                                
+                                NavigationLink(destination: LeaderboardView()) {
+                                    Text("View All")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(AppTheme.primary)
+                                }
+                            }
+                            .padding(.horizontal, AppTheme.Spacing.lg)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: AppTheme.Spacing.md) {
@@ -131,7 +167,7 @@ struct HomeView: View {
                                 .padding(.horizontal, AppTheme.Spacing.lg)
                             }
                         }
-                        .padding(.bottom, AppTheme.Spacing.xl)
+                        .padding(.bottom, 100) // Extra space for tab bar
                     }
                 }
             }
@@ -140,6 +176,141 @@ struct HomeView: View {
     }
 }
 
+// MARK: - Welcome Banner
+struct WelcomeBanner: View {
+    @EnvironmentObject var appState: AppState
+    
+    var body: some View {
+        ZStack {
+            // Background
+            RoundedRectangle(cornerRadius: 20)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 1.0, green: 0.45, blue: 0.2),
+                            Color(red: 1.0, green: 0.6, blue: 0.35)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: Color(red: 1.0, green: 0.45, blue: 0.2).opacity(0.3), radius: 15, x: 0, y: 8)
+            
+            // Content
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Welcome back! 👋")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.white.opacity(0.9))
+                    
+                    Text(appState.currentUser?.username ?? "Collector")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    HStack(spacing: 4) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 12))
+                        Text("\(MockData.shared.lighters.count) Lighters")
+                            .font(.system(size: 13, weight: .medium))
+                    }
+                    .foregroundColor(.white.opacity(0.9))
+                }
+                
+                Spacer()
+                
+                // Decorative lighter icon
+                Image(systemName: "flame.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(.white.opacity(0.3))
+            }
+            .padding(AppTheme.Spacing.lg)
+        }
+        .frame(height: 140)
+    }
+}
+
+// MARK: - Quick Actions
+struct QuickActionsRow: View {
+    var body: some View {
+        HStack(spacing: AppTheme.Spacing.md) {
+            NavigationLink(destination: ScanView()) {
+                QuickActionButton(
+                    icon: "qrcode.viewfinder",
+                    title: "Add Lighter",
+                    color: AppTheme.primary
+                )
+            }
+            
+            NavigationLink(destination: LostFoundView()) {
+                QuickActionButton(
+                    icon: "magnifyingglass",
+                    title: "Lost & Found",
+                    color: Color.blue
+                )
+            }
+            
+            NavigationLink(destination: MessagesListView()) {
+                QuickActionButton(
+                    icon: "bubble.left.and.bubble.right.fill",
+                    title: "Messages",
+                    color: Color.purple
+                )
+            }
+        }
+    }
+}
+
+struct QuickActionButton: View {
+    let icon: String
+    let title: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.12))
+                    .frame(width: 56, height: 56)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                    .foregroundColor(color)
+            }
+            
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(AppTheme.textSecondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Empty Lighters
+struct EmptyLightersCard: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(AppTheme.backgroundSecondary)
+                .frame(height: 160)
+            
+            VStack(spacing: 12) {
+                Image(systemName: "flame")
+                    .font(.system(size: 40))
+                    .foregroundColor(AppTheme.textTertiary)
+                
+                Text("No lighters yet")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(AppTheme.textSecondary)
+                
+                Text("Scan a QR code to add your first lighter!")
+                    .font(.system(size: 13))
+                    .foregroundColor(AppTheme.textTertiary)
+            }
+        }
+    }
+}
+
+// MARK: - Lighter Card
 struct LighterHorizontalCard: View {
     let lighter: Lighter
     let index: Int
@@ -147,19 +318,17 @@ struct LighterHorizontalCard: View {
     var body: some View {
         VStack(spacing: AppTheme.Spacing.xs) {
             ZStack {
-                RoundedRectangle(cornerRadius: AppTheme.Radius.md)
+                RoundedRectangle(cornerRadius: 16)
                     .fill(Color.white)
                     .frame(width: 120, height: 160)
-                    .shadow(color: Color.black.opacity(0.08), radius: 4, x: 0, y: 2)
+                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
                 
-                // ONE Lighter - Designed programmatically
                 LighterImageView(lighter: lighter, index: index)
                     .frame(width: 120, height: 160)
             }
             
-            // Lighter Name - below the image
-            Text(lighter.brand ?? "Unknown")
-                .font(.system(size: 13, weight: .medium))
+            Text(lighter.brand ?? "Clipper")
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(AppTheme.textPrimary)
                 .lineLimit(1)
                 .frame(width: 120)
@@ -168,92 +337,88 @@ struct LighterHorizontalCard: View {
     }
 }
 
+// MARK: - Campaign Card
 struct CampaignCardClipper: View {
     let title: String
+    let subtitle: String
     let date: String
     let gradient: [Color]
     let lighterIndex: Int
     
     var body: some View {
         ZStack {
-            // Background with gradient
-            ZStack {
-                LinearGradient(
-                    colors: gradient,
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                
-                // Abstract wave pattern overlay
-                Rectangle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.1),
-                                Color.clear
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+            RoundedRectangle(cornerRadius: 20)
+                .fill(
+                    LinearGradient(
+                        colors: gradient,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
-            }
-            .frame(width: 280, height: 160)
-            .cornerRadius(16)
+                )
+                .shadow(color: gradient[0].opacity(0.4), radius: 12, x: 0, y: 6)
             
-            // Content
             HStack(spacing: AppTheme.Spacing.md) {
-                VStack(alignment: .leading, spacing: AppTheme.Spacing.xs) {
-                    // Title stacked vertically
-                    VStack(alignment: .leading, spacing: 2) {
-                        ForEach(title.components(separatedBy: " "), id: \.self) { word in
-                            Text(word)
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white)
-                        }
-                    }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(title)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    Text(subtitle)
+                        .font(.system(size: 12))
+                        .foregroundColor(.white.opacity(0.85))
+                    
+                    Spacer()
                     
                     Text(date)
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.9))
-                        .padding(.top, 4)
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.white.opacity(0.2))
+                        .cornerRadius(12)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                // Lighter - ONE lighter design, Tilted
+                // Lighter silhouette
                 ZStack {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.2))
-                        .frame(width: 80, height: 120)
-                        .rotationEffect(.degrees(-15))
+                        .fill(Color.white.opacity(0.2))
+                        .frame(width: 70, height: 100)
+                        .rotationEffect(.degrees(10))
                     
-                    LighterImageView(
-                        lighter: MockData.shared.lighters[min(lighterIndex, MockData.shared.lighters.count - 1)],
-                        index: lighterIndex
-                    )
-                    .frame(width: 70, height: 110)
-                    .rotationEffect(.degrees(15))
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 36))
+                        .foregroundColor(.white.opacity(0.5))
                 }
             }
-            .padding(AppTheme.Spacing.md)
+            .padding(AppTheme.Spacing.lg)
         }
-        .frame(width: 280, height: 160)
-        .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+        .frame(width: 280, height: 150)
     }
 }
 
+// MARK: - Top Collection Card
 struct TopCollectionCard: View {
     let rank: Int
     
+    private var rankColor: Color {
+        switch rank {
+        case 1: return Color(red: 1.0, green: 0.84, blue: 0.0) // Gold
+        case 2: return Color(red: 0.75, green: 0.75, blue: 0.75) // Silver
+        case 3: return Color(red: 0.8, green: 0.5, blue: 0.2) // Bronze
+        default: return AppTheme.textSecondary
+        }
+    }
+    
     var body: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
-            // Profile Picture
             ZStack {
                 Circle()
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color(red: 0.85, green: 0.85, blue: 0.9),
-                                Color(red: 0.9, green: 0.9, blue: 0.95)
+                                Color(red: 0.95, green: 0.95, blue: 0.97),
+                                Color(red: 0.9, green: 0.9, blue: 0.92)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -262,25 +427,28 @@ struct TopCollectionCard: View {
                     .frame(width: 70, height: 70)
                 
                 Image(systemName: "person.fill")
-                    .font(.system(size: 32))
-                    .foregroundColor(AppTheme.textSecondary)
+                    .font(.system(size: 28))
+                    .foregroundColor(AppTheme.textTertiary)
+                
+                // Rank badge
+                Text("\(rank)")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(width: 24, height: 24)
+                    .background(rankColor)
+                    .clipShape(Circle())
+                    .offset(x: 25, y: -25)
             }
             
-            // Username and Name
             VStack(spacing: 2) {
-                Text("Clipper")
+                Text("@collector\(rank)")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(AppTheme.textPrimary)
                 
-                Text("Usemlaime")
+                Text("\(150 - rank * 10) lighters")
                     .font(.system(size: 11))
                     .foregroundColor(AppTheme.textSecondary)
             }
-            
-            // Rank
-            Text("#\(rank)")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundColor(AppTheme.textPrimary)
         }
         .frame(width: 100)
     }

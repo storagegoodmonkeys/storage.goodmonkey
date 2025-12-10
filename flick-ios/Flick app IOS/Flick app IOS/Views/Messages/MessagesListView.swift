@@ -10,6 +10,7 @@ import SwiftUI
 struct MessagesListView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
+    var isTab: Bool = true  // Default to tab view
     @State private var searchText = ""
     @State private var conversations: [ConversationWithUser] = []
     @State private var isLoading = true
@@ -29,13 +30,15 @@ struct MessagesListView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    Button(action: {
-                        HapticManager.shared.impact(.light)
-                        dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(AppTheme.textPrimary)
+                    if !isTab {
+                        Button(action: {
+                            HapticManager.shared.impact(.light)
+                            dismiss()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundColor(AppTheme.textPrimary)
+                        }
                     }
                     
                     Spacer()

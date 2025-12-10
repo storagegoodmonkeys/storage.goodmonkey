@@ -24,9 +24,10 @@ struct MainTabView: View {
                 }
                 .tag(1)
             
-            MarketplaceView()
+            // Messages replaces Marketplace (client request)
+            MessagesListView()
                 .tabItem {
-                    Label("Marketplace", systemImage: "cart.fill")
+                    Label("Messages", systemImage: "bubble.left.and.bubble.right.fill")
                 }
                 .tag(2)
             
