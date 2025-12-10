@@ -207,7 +207,7 @@ struct EmailVerificationView: View {
         }
         
         isLoading = true
-        authManager.verifyEmailOTP(email: email, token: verificationCode, type: "signup") { success, message in
+        authManager.verifyEmailOTP(email: email, code: verificationCode) { success, message in
             isLoading = false
             if success {
                 HapticManager.shared.success()
