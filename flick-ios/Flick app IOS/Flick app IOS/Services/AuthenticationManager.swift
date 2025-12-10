@@ -16,13 +16,45 @@ class AuthenticationManager: NSObject, ObservableObject {
     private let supabaseService = SupabaseService.shared
     
     func signIn(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
-        // Validate email format
+        // ⚠️ TESTING MODE: Bypass all authentication
+        // Any email/password combination works
+        guard email.contains("@") else {
+            completion(false, "Please enter a valid email address")
+            return
+        }
+        
+        Task {
+            await MainActor.run {
+                // Create mock user for testing
+                self.isAuthenticated = true
+                self.currentUser = User(
+                    id: UUID().uuidString,
+                    email: email,
+                    username: email.components(separatedBy: "@").first ?? "TestUser",
+                    avatarUrl: nil,
+                    bio: nil,
+                    location: nil,
+                    points: 100,
+                    level: .bronze,
+                    createdAt: Date()
+                )
+                UserDefaults.standard.set(true, forKey: "isAuthenticated")
+                UserDefaults.standard.set(self.currentUser!.id, forKey: "current_user_id")
+                HapticManager.shared.success()
+                print("✅ TESTING MODE: Signed in as \(email)")
+                completion(true, nil)
+            }
+        }
+    }
+    
+    // Original signIn kept for reference (commented out)
+    /*
+    func _originalSignIn(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
         guard email.contains("@") && email.contains(".") else {
             completion(false, "Please enter a valid email address")
             return
         }
         
-        // Validate password not empty
         guard !password.isEmpty else {
             completion(false, "Password cannot be empty")
             return
@@ -42,9 +74,7 @@ class AuthenticationManager: NSObject, ObservableObject {
             } catch {
                 await MainActor.run {
                     HapticManager.shared.error()
-                    let errorMessage = error.localizedDescription.contains("Invalid login") || error.localizedDescription.contains("email not confirmed")
-                        ? "Invalid email or password. Please check your credentials."
-                        : error.localizedDescription
+                    let errorMessage = "Invalid credentials"
                     completion(false, errorMessage)
                 }
             }
@@ -52,30 +82,59 @@ class AuthenticationManager: NSObject, ObservableObject {
     }
     
     func signUp(email: String, username: String, password: String, completion: @escaping (Bool, String?) -> Void) {
-        // Validate email format
-        guard email.contains("@") && email.contains(".") else {
+        // ⚠️ TESTING MODE: Bypass all authentication
+        guard email.contains("@") else {
             completion(false, "Please enter a valid email address")
             return
         }
         
-        // Validate password strength
-        guard password.count >= 6 else {
-            completion(false, "Password must be at least 6 characters")
-            return
-        }
-        
-        // Validate username
-        guard !username.isEmpty && username.count >= 3 else {
-            completion(false, "Username must be at least 3 characters")
+        guard !username.isEmpty else {
+            completion(false, "Please enter a username")
             return
         }
         
         Task {
+            await MainActor.run {
+                // Create mock user for testing - no Supabase call
+                self.isAuthenticated = true
+                self.currentUser = User(
+                    id: UUID().uuidString,
+                    email: email,
+                    username: username,
+                    avatarUrl: nil,
+                    bio: nil,
+                    location: nil,
+                    points: 0,
+                    level: .bronze,
+                    createdAt: Date()
+                )
+                UserDefaults.standard.set(true, forKey: "isAuthenticated")
+                UserDefaults.standard.set(self.currentUser!.id, forKey: "current_user_id")
+                HapticManager.shared.success()
+                print("✅ TESTING MODE: Signed up as \(email)")
+                completion(true, "Account created successfully!")
+            }
+        }
+    }
+    
+    // Original signUp for reference (commented)
+    /*
+    func _originalSignUp(email: String, username: String, password: String, completion: @escaping (Bool, String?) -> Void) {
+        guard email.contains("@") && email.contains(".") else {
+            completion(false, "Please enter a valid email address")
+            return
+        }
+        guard password.count >= 6 else {
+            completion(false, "Password must be at least 6 characters")
+            return
+        }
+        guard !username.isEmpty && username.count >= 3 else {
+            completion(false, "Username must be at least 3 characters")
+            return
+        }
+        Task {
             do {
-                // Sign up and immediately sign in (no email verification required for testing)
                 let user = try await supabaseService.signUp(email: email, password: password, username: username)
-                
-                // Immediately sign in the user
                 await MainActor.run {
                     self.isAuthenticated = true
                     self.currentUser = user
